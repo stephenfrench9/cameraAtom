@@ -2,6 +2,7 @@ package com.example.stephenfrench.cameraatom;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -67,13 +68,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("alex", "onActivityResult(): start");
-        galleryAddPic();
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            Log.d("alex", "onActivityResult(): result confirmed");
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            mImageView.setImageBitmap(imageBitmap);
-//        }
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Log.d("alex", "onActivityResult(): result confirmed");
+
+
+            Bitmap imageBitmap = (Bitmap) BitmapFactory.decodeFile(mCurrentPhotoPath);
+
+
+            mImageView.setImageBitmap(imageBitmap);
+            Log.d("alex", "onActivityResult(): got imageview");
+        }
         Log.d("alex", "onActivityResult(): end");
     }
 
