@@ -73,15 +73,19 @@ public class MainActivity extends AppCompatActivity {
             Log.d("alex", "onActivityResult(): result confirmed");
 
 
-            Bitmap imageBitmap = (Bitmap) BitmapFactory.decodeFile(mCurrentPhotoPath);
 
 
-            mImageView.setImageBitmap(imageBitmap);
+
+
             Log.d("alex", "onActivityResult(): got imageview");
         }
         Log.d("alex", "onActivityResult(): end");
     }
 
+    public void displayPic(View v) {
+        Bitmap imageBitmap = (Bitmap) BitmapFactory.decodeFile(mCurrentPhotoPath);
+        mImageView.setImageBitmap(imageBitmap);
+    }
 
     private File createImageFile() throws IOException {
         Log.d("alex", "createImageFile(): start");
@@ -107,5 +111,10 @@ public class MainActivity extends AppCompatActivity {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
+    }
+
+    public void empty(View view) {
+        mImageView.setImageBitmap(null);
+
     }
 }
