@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("alex", "onCreate(): start");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mImageView = findViewById(R.id.prestige);
@@ -35,9 +34,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void buttonClicked(View v) {
-        Log.d("alex", "buttonClicked(): start");
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("alex", "onActivityResult(): start");
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Log.d("alex", "onActivityResult(): result confirmed");
+
+            Log.d("alex", "onActivityResult(): got imageview");
+        }
+        Log.d("alex", "onActivityResult(): end");
+    }
+
+
+    public void shoot(View v) {
+        Log.d("alex", "shoot(): start");
         dispatchTakePictureIntent();
+    }
+
+    public void display(View v) {
+        Bitmap imageBitmap = (Bitmap) BitmapFactory.decodeFile(mCurrentPhotoPath);
+        mImageView.setImageBitmap(imageBitmap);
+    }
+
+    public void empty(View view) {
+        mImageView.setImageBitmap(null);
+
     }
 
     private void dispatchTakePictureIntent() {
@@ -65,26 +87,12 @@ public class MainActivity extends AppCompatActivity {
         Log.d("alex", "dispatchTakePictureIntent(): end");
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d("alex", "onActivityResult(): start");
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Log.d("alex", "onActivityResult(): result confirmed");
-
-
-
-
-
-
-            Log.d("alex", "onActivityResult(): got imageview");
-        }
-        Log.d("alex", "onActivityResult(): end");
-    }
-
-    public void displayPic(View v) {
-        Bitmap imageBitmap = (Bitmap) BitmapFactory.decodeFile(mCurrentPhotoPath);
-        mImageView.setImageBitmap(imageBitmap);
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
     }
 
     private File createImageFile() throws IOException {
@@ -105,16 +113,4 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-    public void empty(View view) {
-        mImageView.setImageBitmap(null);
-
-    }
 }
