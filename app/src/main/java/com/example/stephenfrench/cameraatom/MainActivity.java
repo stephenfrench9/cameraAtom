@@ -40,16 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Log.d("alex", "onActivityResult(): result confirmed");
-
+            loadThumbNail(data);
             Log.d("alex", "onActivityResult(): got imageview");
         }
         Log.d("alex", "onActivityResult(): end");
     }
 
-
     public void shoot(View v) {
         Log.d("alex", "shoot(): start");
-        dispatchTakePictureIntent();
+        dispatchTakePictureIntentSimple();
     }
 
     public void display(View v) {
@@ -85,6 +84,29 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         Log.d("alex", "dispatchTakePictureIntent(): end");
+    }
+
+    private void dispatchTakePictureIntentSimple() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File photoFile=null;
+        try {photoFile = createImageFile();} catch (IOException e) {}
+        Uri photoURI = FileProvider.getUriForFile(this,
+                "com.example.android.fileprovider",
+                photoFile);
+//        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+
+    }
+
+    private void loadThumbNail(Intent data) {
+        Log.d("Alex", "loadThumbNail(): start");
+        if(data == null) {
+            Log.d("Alex", "the intent passed to activity result is null");
+        }
+        Bundle extras = data.getExtras();
+        Log.d("Alex", "loadThumbNail(): getting bitmap" + extras.toString());
+        Bitmap imageBitmap = (Bitmap) extras.get("data");
+        mImageView.setImageBitmap(imageBitmap);
     }
 
     private void galleryAddPic() {
